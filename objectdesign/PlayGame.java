@@ -6,10 +6,19 @@ public class PlayGame {
 
 	static Scanner play = new Scanner(System.in);
 	static boolean userFailed = false;
+	static boolean stillPlaying = true;
 
 	public static void main(String[] args) {
 
-		System.out.println("Welcome to the Best of Them All game!\n");
+		while (stillPlaying) {
+
+			startGame();
+		}
+	}
+
+	public static boolean startGame() {
+
+		System.out.println("\nWelcome to the Best of Them All game!\n");
 		System.out.println("Please enter 1 if you want to be a Wizard, or 2 if you want to be an Archer: ");
 		String charChoice = play.nextLine();
 
@@ -25,13 +34,15 @@ public class PlayGame {
 		default:
 			System.out.println("I'm sorry, you've made an error. Please restart the game.");
 			System.exit(0);
-		} // switch
+		}
 
-	} // main
+		return stillPlaying;
+	}
 
-	public static void theWizard() {
+	public static boolean theWizard() {
 
 		String userInput = null;
+		String playAgain = null;
 
 		Wizard wizardA = new Wizard();
 
@@ -88,13 +99,30 @@ public class PlayGame {
 		int staffNums = Integer.parseInt(userInput);
 		wizardA.setNumOfStaffs(staffNums);
 
-		System.out.println(wizardA.toString());
+		System.out.println("\nCongratulations! You have created a wizard named " + wizardA.getName() + " with a "
+				+ wizardA.getCapeColor() + " cape.");
+		System.out.println("\t" + wizardA.getName() + " is a " + wizardA.getGender() + " with " + wizardA.getHairColor()
+				+ " hair and " + wizardA.getEyeColor() + " eyes.");
+		System.out.println("\t" + wizardA.getName() + " the wizard is " + wizardA.getAge() + " years old, "
+				+ wizardA.getHeight() + " ft tall, and has " + wizardA.getNumOfStaffs() + " staffs.");
+		System.out.print("\t" + wizardA.getName() + " ");
+		wizardA.eats();
+		wizardA.sleeps();
+		wizardA.moves();
+		wizardA.attackPoints();
+
+		System.out.println("\nWould you like to play again? Y or N");
+		playAgain = play.nextLine();
+		restart(playAgain);
+
+		return stillPlaying;
 	}
 
-	public static void theArcher() {
+	public static boolean theArcher() {
 
 		String userInput = null;
 		String inForest = null;
+		String playAgain = null;
 
 		Archer archerA = new Archer();
 
@@ -147,21 +175,48 @@ public class PlayGame {
 		int bowNums = Integer.parseInt(userInput);
 		archerA.setNumOfBows(bowNums);
 
+		do {
 
-		System.out.println("Does your archer live in the forest? ");
-		userInput = play.nextLine().toLowerCase();
+			System.out.println("Does your archer live in the forest? (Please enter y for yes or n for no)");
+			userInput = play.nextLine();
 
-		if (userInput.equalsIgnoreCase("y")) {
-			inForest = "live in the forest";
-		} 
-		
-		else {
-			inForest = "do not live the forest";
-		}
-		
+			if (userInput.equalsIgnoreCase("yes") || userInput.equalsIgnoreCase("y")) {
+
+				inForest = "lives in the forest";
+				userFailed = false;
+
+			} else if (userInput.equalsIgnoreCase("no") || userInput.equalsIgnoreCase("n")) {
+
+				inForest = "does not live in the forest";
+				userFailed = false;
+			} else {
+
+				System.out.println("Please enter y or n only.");
+				userFailed = true;
+
+			}
+
+		} while (userFailed);
+
 		archerA.setLivesInForest(inForest);
-		System.out.println(archerA.toString());
-		
+
+		System.out.println("\nCongratulations! You have created an archer named " + archerA.getName() + " who "
+				+ archerA.getLivesInForest() + ".");
+		System.out.println("\t" + archerA.getName() + " is a " + archerA.getGender() + " with " + archerA.getHairColor()
+				+ " hair and " + archerA.getEyeColor() + " eyes.");
+		System.out.println("\t" + archerA.getName() + " the archer is " + archerA.getAge() + " years old, "
+				+ archerA.getHeight() + " ft tall, and has " + archerA.getNumOfBows() + " bows.");
+		System.out.print("\t" + archerA.getName() + " ");
+		archerA.eats();
+		archerA.sleeps();
+		archerA.moves();
+		archerA.attackPoints();
+
+		System.out.println("\nWould you like to play again? Y or N");
+		playAgain = play.nextLine();
+		restart(playAgain);
+
+		return stillPlaying;
 	}
 
 	public static boolean ageIsValid(String ageNum) {
@@ -171,7 +226,7 @@ public class PlayGame {
 			return false;
 
 		} catch (NumberFormatException e) {
-			return true; 
+			return true;
 		}
 	}
 
@@ -180,10 +235,10 @@ public class PlayGame {
 		try {
 			float isANum = Float.parseFloat(heightNum);
 			return false;
-			
+
 		} catch (NumberFormatException e) {
-			return true; 
-			
+			return true;
+
 		}
 	}
 
@@ -193,9 +248,23 @@ public class PlayGame {
 			return true;
 
 		} else {
-//			System.out.println("Please Enter 'y' or 'n' only");
+
 			return false;
 		}
 	}
 
-} // class
+	private static boolean restart(String playAgain) {
+
+		if (playAgain.equalsIgnoreCase("yes") || playAgain.equalsIgnoreCase("y")) {
+
+			stillPlaying = true;
+		} else {
+
+			System.out.println("Game Over.");
+			stillPlaying = false;
+		}
+
+		return stillPlaying;
+	}
+
+} 
